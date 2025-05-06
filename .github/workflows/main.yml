@@ -26,21 +26,22 @@ jobs:
        
     -  name: Deploy to S3
        run: |
-         aws s3 cp dist/ s3://react-todo-workshop/ --recursive --exclude "*" --include "*.js" --content-type "text/javascript" --metadata-directive REPLACE
+         aws s3 sync dist/ s3://react-todo-workshop/ --delete
+         aws s3 cp dist/ s3://react-todo-workshop/ --recursive --exclude "*" --include "*.js" --content-type "application/javascript" --metadata-directive REPLACE
          aws s3 cp dist/ s3://react-todo-workshop/ --recursive --exclude "*" --include "*.css" --content-type "text/css" --metadata-directive REPLACE
          aws s3 cp dist/ s3://react-todo-workshop/ --recursive --exclude "*" --include "*.html" --content-type "text/html" --metadata-directive REPLACE
          aws s3 cp dist/ s3://react-todo-workshop/ --recursive --exclude "*" --include "*.svg" --content-type "image/svg+xml" --metadata-directive REPLACE
-         aws s3 cp dist/ s3://react-todo-workshop/ --recursive --exclude "*.js" --exclude "*.css" --exclude "*.html" --exclude "*.svg"
+         aws s3 cp dist/ s3://react-todo-workshop/ --recursive --exclude "*" --include "*.json" --content-type "application/json" --metadata-directive REPLACE
        env:
          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
          AWS_REGION: eu-west-1
+         AWS_EC2_METADATA_DISABLED: true
    
-    -  name: Invalidate Cloudfront Cache
+    -  name: Invalidate CloudFront cache
        run: aws cloudfront create-invalidation --distribution-id E179NKVJMRYRAL --paths "/*"
        env:
          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
          AWS_REGION: eu-west-1
-       
-       
+         AWS_EC2_METADATA_DISABLED: true
