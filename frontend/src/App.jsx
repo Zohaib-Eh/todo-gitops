@@ -1,8 +1,6 @@
 import TaskList from './components/Tasks'
 import './App.css'
 
-//Making this comment to trigger CICD
-
 function App() {
   return (
     <>
