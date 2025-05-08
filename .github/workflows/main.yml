@@ -76,7 +76,7 @@ jobs:
         run: |
           IMAGE_NAME=todo-backend
           ECR_REGISTRY=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com
-          ECR_REPO=react-todo
+          ECR_REPO=workshops/react-todo
           TAG=latest
   
           docker build -t $IMAGE_NAME ./backend
