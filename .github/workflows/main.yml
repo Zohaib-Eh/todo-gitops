@@ -83,6 +83,10 @@ jobs:
           docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REPO:$TAG
   
       - name: Push Docker Image to ECR
+        env:
+          ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com
+          ECR_REPO: workshops/react-todo
+          TAG: latest
         run: |
           docker push $ECR_REGISTRY/$ECR_REPO:$TAG
     
