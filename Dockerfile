@@ -1,17 +1,26 @@
+# -------- Stage 1: Testing --------
+    FROM python:3.9 AS test
 
-FROM python:3.9
-
-
-WORKDIR /code
-
-
-COPY ./requirements.txt /code/requirements.txt
-
-
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
-
-
-COPY ./app /code/app
-
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+    WORKDIR /code
+    
+    COPY backend/ /code/backend
+    COPY requirements.txt /code/
+    
+    RUN pip install --no-cache-dir -r requirements.txt
+    
+    # Run tests
+    WORKDIR /code/backend
+    RUN pytest -v
+    
+    # -------- Stage 2: Final --------
+    FROM python:3.9 AS final
+    
+    WORKDIR /code
+    
+    # Copy only if tests succeeded
+    COPY --from=test /code /code
+    
+    EXPOSE 8000
+    
+    CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    
