@@ -60,29 +60,32 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+        
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
-      
+  
       - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-      
-      - name: Build, tag, and push backend Docker image
+        run: |
+          aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com
+  
+      - name: Build and Tag Docker Image
         run: |
           IMAGE_NAME=todo-backend
-          ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com
           ECR_REPO=react-todo
           TAG=latest
-
+  
           docker build -t $IMAGE_NAME ./backend
           docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REPO:$TAG
-          docker push $ECR_REGISTRY/$ECR_REPO:$TAG
   
+      - name: Push Docker Image to ECR
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/react-todo:latest
+    
   deploy:
     name: Deploy to S3
     needs: [frontend-test, backend-test]
