@@ -84,7 +84,7 @@ jobs:
   
       - name: Push Docker Image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/react-todo:latest
+          docker push $ECR_REGISTRY/$ECR_REPO:$TAG
     
   deploy:
     name: Deploy to S3
