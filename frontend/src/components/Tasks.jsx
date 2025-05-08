@@ -40,7 +40,7 @@ const TaskList = () => {
   return (
     <div>
       <h2>Task List</h2>
-      <ol>
+      <ol data-testid='tasks'>
         {tasks.map((task, index) => (
           <li key={index}>{task.name}</li>
         ))}

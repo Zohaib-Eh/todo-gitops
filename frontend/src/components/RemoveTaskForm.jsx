@@ -17,9 +17,10 @@ const RemoveTaskForm = ({ removeTask }) => {
         type="number"
         value={taskIndex}
         onChange={(e) => setTaskIndex(e.target.value)}
-        placeholder="Enter task name"
+        placeholder="Enter task index"
+        data-testid='removeTaskForm' 
       />
-      <button type="submit">Remove Task</button>
+      <button data-testid='removeTask' type="submit">Remove Task</button>
     </form>
   );
 };
